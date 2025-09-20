@@ -68,6 +68,7 @@ MINIO_ACCESS_KEY=your_access_key
 MINIO_SECRET_KEY=your_secret_key
 MINIO_SECURE=true
 MINIO_MAX_BUCKETS=5
+MINIO_MAX_KEYS=1000
 
 # Server Configuration
 SERVER_HOST=0.0.0.0
@@ -81,11 +82,27 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 
 ### Running the Server
 
-The server can be run directly:
+Start the server over stdio (the default transport) with:
 
 ```bash
 python src/minio_mcp_server/server.py
 ```
+
+To expose the server over HTTP using Server-Sent Events (SSE) via
+`fastmcp`, choose the `sse` transport. The host and port default to the
+values from `SERVER_HOST`/`SERVER_PORT` (or `0.0.0.0:8000`), and the
+endpoints default to `/sse` for the event stream and `/messages/` for
+message posts:
+
+```bash
+python src/minio_mcp_server/server.py --transport sse --host 0.0.0.0 --port 8000
+```
+
+Set `MCP_TRANSPORT` to `sse`, `streamable-http`, or `stdio` in your
+environment to change the default transport without supplying command
+line flags. Optional `SERVER_SSE_PATH` and `SERVER_MESSAGE_PATH`
+variables let you override the SSE endpoints if you need to align with a
+different MCP client configuration.
 
 ### Using the Basic Client
 
